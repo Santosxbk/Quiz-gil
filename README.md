@@ -1,40 +1,32 @@
 # 🚀 Quiz de Metodologias Ágeis
+[![GitHub license](https://img.shields.io/github/license/Santosxbk/Quiz-gil)](LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/Santosxbk/Quiz-gil)](https://github.com/Santosxbk/Quiz-gil/stargazers)
+[![Website](https://img.shields.io/website?url=https%3A%2F%2Fsantosxbk.github.io%2FQuiz-gil%2F)](https://santosxbk.github.io/Quiz-gil/)
 
-[![GitHub license](https://img.shields.io/github/license/Santosxbk/quiz-metodologias-ageis)](LICENSE)
-[![GitHub stars](https://img.shields.io/github/stars/Santosxbk/quiz-metodologias-ageis)](https://github.com/Santosxbk/quiz-metodologias-ageis/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/Santosxbk/quiz-metodologias-ageis)](https://github.com/Santosxbk/quiz-metodologias-ageis/network)
-
-Um quiz interativo sobre Scrum, Kanban e XP com três níveis de dificuldade e efeitos visuais.
-
-🔗 **Acesse o quiz online:** [https://santosxbk.github.io/quiz-metodologias-ageis](https://santosxbk.github.io/quiz-metodologias-ageis)
+🔗 **Acesse o quiz:** [https://santosxbk.github.io/Quiz-gil/](https://santosxbk.github.io/Quiz-gil/)
 
 <img width="1215" height="808" alt="image" src="https://github.com/user-attachments/assets/690af987-5ffb-42cc-b32d-1ffff1b30398" />
 
-## ✨ Funcionalidades
-
-- ✅ 3 níveis de dificuldade (Fácil, Médio, Difícil)
-- ✅ Efeitos de confete para respostas corretas
-- ✅ Temporizador para cada pergunta
-- ✅ Explicações detalhadas das respostas
-- ✅ Design responsivo (funciona em celulares e tablets)
+## 🕹️ Como Jogar
+1. Escolha entre **Fácil**, **Médio** ou **Difícil**
+2. Responda antes do tempo acabar
+3. Acumule pontos e veja seu resultado final
 
 ## 🛠️ Tecnologias
+<div style="display: flex; gap: 10px;">
+  <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white">
+  <img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white">
+  <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black">
+</div>
 
-- HTML5
-- CSS3 (Flexbox e Grid)
-- JavaScript
-- Hospedado no GitHub Pages
+## 📌 Recursos
+- ✔️ 15 perguntas sobre Scrum, Kanban e XP
+- ✔️ Efeitos de confete ao acertar
+- ✔️ Design responsivo
+- ✔️ Sistema de pontuação
 
-## 📥 Como Jogar
-
-1. Acesse [o quiz online](https://santosxbk.github.io/quiz-metodologias-ageis)
-2. Escolha seu nível de dificuldade
-3. Responda antes do tempo acabar
-4. Veja sua pontuação final!
-
-## 🖥️ Rodando Localmente
-
+## 🚀 Executando Localmente
 ```bash
-git clone https://github.com/Santosxbk/quiz-metodologias-ageis.git
-cd quiz-metodologias-ageis
-# Abra o arquivo index.html no navegador
+git clone https://github.com/Santosxbk/Quiz-gil.git
+cd Quiz-gil
+# Abra index.html no navegador
