@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Ágil - Teste seu conhecimento em metodologias ágeis</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --success: #4cc9f0;
+            --danger: #f72585;
+            --warning: #f8961e;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --bg-gradient: linear-gradient(135deg, #4361ee 0%, #3f37c9 100%);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f7fa;
+            color: var(--dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+            transition: background-color 0.5s ease;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin: auto;
+        }
+        
+        header {
+            background: var(--bg-gradient);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 150px;
+            height: 150px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+        
+        header::after {
+            content: "";
+            position: absolute;
+            bottom: -80px;
+            left: -80px;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+        
+        h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .subtitle {
+            font-weight: 300;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .agile-icon {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+        }
+        
+        .level-selector {
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .level-title {
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+            color: var(--dark);
+        }
+        
+        .level-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .level-btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            min-width: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .level-btn i {
+            margin-right: 8px;
+            font-size: 1.2rem;
+        }
+        
+        .easy {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .medium {
+            background-color: var(--warning);
+            color: white;
+        }
+        
+        .hard {
+            background-color: var(--danger);
+            color: white;
+        }
+        
+        .level-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .quiz-content {
+            padding: 2rem;
+            display: none;
+        }
+        
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .level-indicator {
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: white;
+        }
+        
+        .timer {
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .timer i {
+            margin-right: 5px;
+            color: var(--danger);
+        }
+        
+        .progress-container {
+            width: 100%;
+            height: 8px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: var(--bg-gradient);
+            border-radius: 4px;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .question {
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+            color: var(--dark);
+        }
+        
+        .options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        @media (min-width: 600px) {
+            .options {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        .option {
+            padding: 1rem;
+            background-color: white;
+            border: 2px solid #dee2e6;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            font-weight: 500;
+            color: var(--dark);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .option:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .option.correct {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+        
+        .option.incorrect {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+        
+        .feedback-container {
+            margin: 1.5rem 0;
+            min-height: 60px;
+        }
+        
+        .feedback {
+            font-size: 1.25rem;
+            font-weight: 600;
+            padding: 1rem;
+            border-radius: 12px;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        .correct-feedback {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .incorrect-feedback {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .explanation {
+            background-color: #e9ecef;
+            padding: 1rem;
+            border-radius: 12px;
+            margin-top: 1rem;
+            display: none;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+        
+        .next-btn {
+            padding: 0.8rem 1.5rem;
+            background: var(--bg-gradient);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 500;
+            display: none;
+            margin: 0 auto;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .next-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            opacity: 0.9;
+        }
+        
+        .score-container {
+            text-align: center;
+            margin-top: 1rem;
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+        
+        .final-screen {
+            padding: 2rem;
+            text-align: center;
+            display: none;
+        }
+        
+        .final-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+        
+        .final-score {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            background: var(--bg-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+        
+        .final-message {
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+        
+        .restart-btn {
+            padding: 0.8rem 1.5rem;
+            background: var(--bg-gradient);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: inline-flex;
+            align-items: center;
+        }
+        
+        .restart-btn i {
+            margin-right: 8px;
+        }
+        
+        .restart-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            opacity: 0.9;
+        }
+        
+        .confetti {
+            position: fixed;
+            width: 12px;
+            height: 12px;
+            background-color: var(--primary);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1000;
+            animation: fall linear forwards;
+        }
+        
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 576px) {
+            body {
+                padding: 1rem;
+            }
+            
+            header {
+                padding: 1.5rem;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .quiz-content, .level-selector, .final-screen {
+                padding: 1.5rem;
+            }
+            
+            .level-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .level-btn {
+                width: 100%;
+                max-width: 250px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="https://cdn-icons-png.flaticon.com/512/1688/1688450.png" alt="Metodologias Ágeis" class="agile-icon">
+            <h1>Quiz de Metodologias Ágeis</h1>
+            <p class="subtitle">Teste seu conhecimento sobre Scrum, Kanban e outras metodologias</p>
+        </header>
+        
+        <div class="level-selector" id="level-selector">
+            <h2 class="level-title">Selecione o nível de dificuldade:</h2>
+            <div class="level-buttons">
+                <button class="level-btn easy" id="easy-btn">
+                    <i class="fas fa-seedling"></i> Fácil
+                </button>
+                <button class="level-btn medium" id="medium-btn">
+                    <i class="fas fa-balance-scale"></i> Médio
+                </button>
+                <button class="level-btn hard" id="hard-btn">
+                    <i class="fas fa-fire"></i> Difícil
+                </button>
+            </div>
+        </div>
+        
+        <div class="quiz-content" id="quiz-content">
+            <div class="quiz-header">
+                <div class="level-indicator" id="level-indicator"></div>
+                <div class="timer" id="timer">
+                    <i class="fas fa-clock"></i> <span id="time">30</span>s
+                </div>
+            </div>
+            
+            <div class="progress-container">
+                <div class="progress-bar" id="progress"></div>
+            </div>
+            
+            <div class="question" id="question"></div>
+            
+            <div class="options" id="options"></div>
+            
+            <div class="feedback-container">
+                <div class="feedback" id="feedback"></div>
+                <div class="explanation" id="explanation"></div>
+            </div>
+            
+            <button class="next-btn" id="next-btn">
+                <i class="fas fa-arrow-right"></i> Próxima Pergunta
+            </button>
+            
+            <div class="score-container" id="score-container">
+                Pontuação: <span id="score">0</span>/<span id="total-questions">5</span>
+            </div>
+        </div>
+        
+        <div class="final-screen" id="final-screen">
+            <h2 class="final-title">Quiz Concluído!</h2>
+            <div class="final-score" id="final-score"></div>
+            <p class="final-message" id="final-message"></p>
+            <button class="restart-btn" id="restart-btn">
+                <i class="fas fa-redo"></i> Jogar Novamente
+            </button>
+        </div>
+    </div>
+    
+    <script>
+        // Perguntas sobre Metodologias Ágeis organizadas por nível
+        const questionsByLevel = {
+            easy: [
+                {
+                    question: "Qual destes NÃO é um princípio do Manifesto Ágil?",
+                    options: [
+                        "Indivíduos e interações mais que processos e ferramentas",
+                        "Software em funcionamento mais que documentação abrangente",
+                        "Seguir o plano rigidamente mais que responder a mudanças",
+                        "Colaboração com o cliente mais que negociação de contratos"
+                    ],
+                    answer: 2,
+                    explanation: "O Manifesto Ágil valoriza 'Responder a mudanças mais que seguir um plano'. A rigidez vai contra os princípios ágeis."
+                },
+                {
+                    question: "Qual é a metodologia ágil que utiliza sprints?",
+                    options: ["Scrum", "Kanban", "XP (Extreme Programming)", "Lean"],
+                    answer: 0,
+                    explanation: "Scrum é a metodologia que trabalha com sprints (iterações com tempo fixo, geralmente de 1-4 semanas)."
+                },
+                {
+                    question: "Quem é responsável por remover impedimentos no Scrum?",
+                    options: ["Product Owner", "Scrum Master", "Time de Desenvolvimento", "Stakeholders"],
+                    answer: 1,
+                    explanation: "O Scrum Master tem como uma de suas principais funções remover impedimentos que atrapalham o time."
+                },
+                {
+                    question: "Qual artefato do Scrum contém as funcionalidades do produto?",
+                    options: ["Sprint Backlog", "Product Backlog", "Incremento", "Burndown Chart"],
+                    answer: 1,
+                    explanation: "O Product Backlog é a lista priorizada de tudo que pode ser necessário no produto, mantido pelo Product Owner."
+                },
+                {
+                    question: "Qual cerimônia do Scrum ocorre no início de cada sprint?",
+                    options: ["Daily Scrum", "Sprint Review", "Sprint Retrospective", "Sprint Planning"],
+                    answer: 3,
+                    explanation: "O Sprint Planning é a reunião onde o time planeja o trabalho do sprint que está começando."
+                }
+            ],
+            medium: [
+                {
+                    question: "Qual é o tempo máximo recomendado para uma Daily Scrum?",
+                    options: ["15 minutos", "30 minutos", "1 hora", "2 horas"],
+                    answer: 0,
+                    explanation: "A Daily Scrum (ou Stand-up) deve ser time-boxed em 15 minutos para manter o foco e a eficiência."
+                },
+                {
+                    question: "O que significa o termo 'Timebox' em metodologias ágeis?",
+                    options: [
+                        "Um container para guardar materiais do time",
+                        "Um período de tempo fixo para uma atividade",
+                        "Uma caixa de ferramentas para gestão de projetos",
+                        "Um quadro para organizar tarefas do time"
+                    ],
+                    answer: 1,
+                    explanation: "Timebox é um conceito fundamental em ágil que define um período máximo de tempo para uma atividade ou evento."
+                },
+                {
+                    question: "Qual destes NÃO é um valor do XP (Extreme Programming)?",
+                    options: ["Coragem", "Simplicidade", "Hierarquia", "Feedback"],
+                    answer: 2,
+                    explanation: "Os valores do XP são: Comunicação, Simplicidade, Feedback, Coragem e Respeito. Hierarquia não é um valor do XP."
+                },
+                {
+                    question: "Qual técnica do Kanban ajuda a identificar gargalos?",
+                    options: ["Limite de WIP", "Cadência", "User Stories", "Planning Poker"],
+                    answer: 0,
+                    explanation: "Limite de WIP (Work In Progress) ajuda a evitar sobrecarga e identifica gargalos no fluxo de trabalho."
+                },
+                {
+                    question: "O que é um 'MVP' em desenvolvimento ágil?",
+                    options: [
+                        "Minimum Viable Product - versão mínima testável de um produto",
+                        "Most Valuable Player - membro mais produtivo do time",
+                        "Maximum Value Proposition - proposta de valor máxima",
+                        "Multi-Variable Process - processo com múltiplas variáveis"
+                    ],
+                    answer: 0,
+                    explanation: "MVP (Minimum Viable Product) é uma versão do produto com funcionalidades mínimas para validar ideias com usuários reais."
+                }
+            ],
+            hard: [
+                {
+                    question: "Qual técnica de estimativa ágil usa a sequência de Fibonacci?",
+                    options: ["Planning Poker", "T-Shirt Sizes", "Dot Voting", "Affinity Estimation"],
+                    answer: 0,
+                    explanation: "Planning Poker utiliza cartas com números da sequência de Fibonacci (1, 2, 3, 5, 8, 13...) para estimar esforço."
+                },
+                {
+                    question: "Qual o principal objetivo de uma Sprint Retrospective?",
+                    options: [
+                        "Demonstrar o incremento para os stakeholders",
+                        "Planejar o trabalho do próximo sprint",
+                        "Inspecionar e adaptar o processo de trabalho",
+                        "Priorizar itens do product backlog"
+                    ],
+                    answer: 2,
+                    explanation: "A Retrospectiva visa inspecionar como foi o último sprint e adaptar o processo para melhorar continuamente."
+                },
+                {
+                    question: "O que significa 'Refactoring' no XP (Extreme Programming)?",
+                    options: [
+                        "Reescrever todo o código do zero",
+                        "Reorganizar a estrutura do código sem alterar seu comportamento",
+                        "Documentar todo o código existente",
+                        "Substituir o código por soluções prontas"
+                    ],
+                    answer: 1,
+                    explanation: "Refactoring é a técnica de melhorar a estrutura interna do código sem mudar seu comportamento externo, mantendo a qualidade."
+                },
+                {
+                    question: "Qual destes é um anti-padrão em metodologias ágeis?",
+                    options: [
+                        "Scrum de Scrums",
+                        "Sprint Zero",
+                        "Daily Stand-up",
+                        "Pair Programming"
+                    ],
+                    answer: 1,
+                    explanation: "Sprint Zero é considerado um anti-padrão por muitos agilistas, pois muitas vezes vira desculpa para não começar a entregar valor imediatamente."
+                },
+                {
+                    question: "Qual framework ágil é mais adequado para projetos com requisitos altamente voláteis?",
+                    options: ["Scrum", "Kanban", "SAFe", "Disciplined Agile"],
+                    answer: 1,
+                    explanation: "Kanban, com seu fluxo contínuo e sem iterações fixas, é mais adequado para contextos com alta volatilidade de requisitos."
+                }
+            ]
+        };
+        
+        // Elementos do DOM
+        const levelSelector = document.getElementById('level-selector');
+        const quizContent = document.getElementById('quiz-content');
+        const finalScreen = document.getElementById('final-screen');
+        const levelIndicator = document.getElementById('level-indicator');
+        const timerElement = document.getElementById('timer');
+        const timeElement = document.getElementById('time');
+        const questionElement = document.getElementById('question');
+        const optionsElement = document.getElementById('options');
+        const feedbackElement = document.getElementById('feedback');
+        const explanationElement = document.getElementById('explanation');
+        const nextButton = document.getElementById('next-btn');
+        const scoreElement = document.getElementById('score');
+        const totalQuestionsElement = document.getElementById('total-questions');
+        const progressBar = document.getElementById('progress');
+        const easyBtn = document.getElementById('easy-btn');
+        const mediumBtn = document.getElementById('medium-btn');
+        const hardBtn = document.getElementById('hard-btn');
+        const finalScoreElement = document.getElementById('final-score');
+        const finalMessageElement = document.getElementById('final-message');
+        const restartBtn = document.getElementById('restart-btn');
+        
+        // Variáveis do jogo
+        let currentLevel = '';
+        let currentQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let answered = false;
+        let timer;
+        let timeLeft = 0;
+        
+        // Iniciar o quiz com um nível específico
+        function startQuiz(level) {
+            currentLevel = level;
+            currentQuestions = [...questionsByLevel[level]];
+            currentQuestionIndex = 0;
+            score = 0;
+            
+            // Configurar interface para o nível selecionado
+            levelSelector.style.display = 'none';
+            quizContent.style.display = 'block';
+            finalScreen.style.display = 'none';
+            
+            // Configurar indicador de nível
+            levelIndicator.textContent = `Nível: ${level.charAt(0).toUpperCase() + level.slice(1)}`;
+            levelIndicator.className = 'level-indicator ' + level;
+            
+            // Configurar temporizador baseado no nível
+            timeLeft = level === 'easy' ? 30 : level === 'medium' ? 20 : 15;
+            updateTimer();
+            
+            // Mostrar pontuação inicial
+            scoreElement.textContent = score;
+            totalQuestionsElement.textContent = currentQuestions.length;
+            
+            showQuestion();
+        }
+        
+        // Mostrar a pergunta atual
+        function showQuestion() {
+            answered = false;
+            const question = currentQuestions[currentQuestionIndex];
+            questionElement.textContent = question.question;
+            questionElement.classList.add('fade-in');
+            
+            optionsElement.innerHTML = '';
+            question.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.textContent = option;
+                button.classList.add('option', 'fade-in');
+                button.style.animationDelay = `${index * 0.1}s`;
+                button.addEventListener('click', () => selectAnswer(index));
+                optionsElement.appendChild(button);
+            });
+            
+            feedbackElement.style.opacity = '0';
+            feedbackElement.className = 'feedback';
+            explanationElement.style.display = 'none';
+            nextButton.style.display = 'none';
+            
+            // Atualizar barra de progresso
+            progressBar.style.width = `${(currentQuestionIndex / currentQuestions.length) * 100}%`;
+            
+            // Reiniciar temporizador
+            clearInterval(timer);
+            timeLeft = currentLevel === 'easy' ? 30 : currentLevel === 'medium' ? 20 : 15;
+            updateTimer();
+            timer = setInterval(() => {
+                timeLeft--;
+                updateTimer();
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    if (!answered) {
+                        timeOut();
+                    }
+                }
+            }, 1000);
+        }
+        
+        // Tempo esgotado
+        function timeOut() {
+            feedbackElement.textContent = 'Tempo esgotado!';
+            feedbackElement.className = 'feedback incorrect-feedback';
+            feedbackElement.style.opacity = '1';
+            document.body.style.backgroundColor = '#fff9fa';
+            nextButton.style.display = 'block';
+            answered = true;
+            
+            // Mostrar resposta correta
+            const question = currentQuestions[currentQuestionIndex];
+            const options = optionsElement.querySelectorAll('.option');
+            options[question.answer].classList.add('correct');
+            
+            // Mostrar explicação se existir
+            if (question.explanation) {
+                explanationElement.textContent = question.explanation;
+                explanationElement.style.display = 'block';
+            }
+        }
+        
+        // Atualizar o temporizador
+        function updateTimer() {
+            timeElement.textContent = timeLeft;
+            timerElement.style.color = timeLeft <= 5 ? 'var(--danger)' : 'var(--dark)';
+        }
+        
+        // Selecionar resposta
+        function selectAnswer(index) {
+            if (answered) return;
+            answered = true;
+            clearInterval(timer);
+            
+            const question = currentQuestions[currentQuestionIndex];
+            const options = optionsElement.querySelectorAll('.option');
+            
+            if (index === question.answer) {
+                // Resposta correta
+                feedbackElement.textContent = 'Resposta Correta! 🎉';
+                feedbackElement.className = 'feedback correct-feedback';
+                document.body.style.backgroundColor = '#f0fff4';
+                score++;
+                scoreElement.textContent = score;
+                createConfetti();
+            } else {
+                // Resposta incorreta
+                feedbackElement.textContent = 'Resposta Incorreta 😕';
+                feedbackElement.className = 'feedback incorrect-feedback';
+                document.body.style.backgroundColor = '#fff9fa';
+                options[question.answer].classList.add('correct');
+            }
+            
+            // Marcar resposta selecionada como incorreta (se for o caso)
+            options[index].classList.add('incorrect');
+            
+            // Mostrar explicação se existir
+            if (question.explanation) {
+                explanationElement.textContent = question.explanation;
+                explanationElement.style.display = 'block';
+            }
+            
+            feedbackElement.style.opacity = '1';
+            nextButton.style.display = 'block';
+        }
+        
+        // Criar efeito de confete
+        function createConfetti() {
+            const colors = ['#4361ee', '#3f37c9', '#4cc9f0', '#4895ef', '#560bad', '#f72585', '#b5179e', '#7209b7'];
+            
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.left = `${Math.random() * 100}vw`;
+                confetti.style.top = '-10px';
+                confetti.style.animationDuration = `${Math.random() * 3 + 2}s`;
+                document.body.appendChild(confetti);
+                
+                setTimeout(() => {
+                    confetti.remove();
+                }, 3000);
+            }
+        }
+        
+        // Próxima pergunta
+        nextButton.addEventListener('click', () => {
+            document.body.style.backgroundColor = '#f5f7fa';
+            currentQuestionIndex++;
+            if (currentQuestionIndex < currentQuestions.length) {
+                showQuestion();
+            } else {
+                // Fim do quiz
+                clearInterval(timer);
+                showFinalScreen();
+            }
+        });
+        
+        // Mostrar tela final
+        function showFinalScreen() {
+            quizContent.style.display = 'none';
+            finalScreen.style.display = 'block';
+            
+            finalScoreElement.textContent = `${score}/${currentQuestions.length}`;
+            
+            // Mensagem final baseada no desempenho
+            const percentage = (score / currentQuestions.length) * 100;
+            let message = '';
+            
+            if (percentage >= 80) {
+                message = 'Excelente desempenho! Você é um verdadeiro expert em metodologias ágeis! 🏆';
+            } else if (percentage >= 60) {
+                message = 'Bom trabalho! Você demonstrou um bom conhecimento dos princípios ágeis! 👍';
+            } else if (percentage >= 40) {
+                message = 'Resultado razoável. Continue praticando e se adaptando - como dizem os princípios ágeis! 💪';
+            } else {
+                message = 'Há espaço para melhoria! Lembre-se: os ágeis respondem a mudanças e aprendem continuamente! 📚';
+            }
+            
+            finalMessageElement.textContent = message;
+        }
+        
+        // Reiniciar o quiz
+        restartBtn.addEventListener('click', () => {
+            levelSelector.style.display = 'block';
+            quizContent.style.display = 'none';
+            finalScreen.style.display = 'none';
+        });
+        
+        // Event listeners para os botões de nível
+        easyBtn.addEventListener('click', () => startQuiz('easy'));
+        mediumBtn.addEventListener('click', () => startQuiz('medium'));
+        hardBtn.addEventListener('click', () => startQuiz('hard'));
+        
+        // Inicializar animações
+        setTimeout(() => {
+            document.querySelectorAll('.fade-in').forEach(el => {
+                el.style.opacity = '1';
+                el.style.transform = 'translateY(0)';
+            });
+        }, 100);
+    </script>
+</body>
+</html>
